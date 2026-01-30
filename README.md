@@ -1,16 +1,127 @@
-# mobile_bootcamp_example
+# Fake Store — Flutter E-commerce Demo
 
-A new Flutter project.
+Учебное мобильное приложение интернет-магазина, созданное в рамках буткемпа по мобильной разработке **Student Labs 2026**.
+Проект демонстрирует полный цикл разработки Flutter-приложения: от архитектуры и состояния до UI и работы с API.
 
-## Getting Started
+## Основной функционал
 
-This project is a starting point for a Flutter application.
+**Fake Store** — это e-commerce приложение с каталогом товаров, корзиной, избранным и профилем пользователя. Основные возможности приложения представлены ниже:
+* Просмотр каталога товаров
+* Детальная страница товара с каруселью изображений, названием, ценой, категорией и описанием
+* Добавление и удаление товаров из корзины
+* Управление количеством товаров в корзине и на странице товара
+* Избранные товары
+* Переключение темы приложения (System / Light / Dark)
+* Сохранение состояния корзины и избранного между сессиями
+* Экран профиля с информацией о проекте
 
-A few resources to get you started if this is your first Flutter project:
+## Технологии
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+Проект написан на **Flutter 3.38.7** и **Dart 3.10.7** с использованием современных подходов:
+* **flutter_bloc** — управление состоянием
+* **equatable** — сравнение состояний и сущностей
+* **dio** — работа с HTTP API
+* **retrofit** — генерация REST API клиентов
+* **json_annotation** — аннотации для JSON сериализации
+* **get_it** — dependency injection
+* **shared_preferences** — локальное хранилище данных
+* **envied** — переменные окружения
+* **cached_network_image** — загрузка и кеширование изображений
+* **spider** — генерация путей к ассетам
+* **intl / flutter_localizations** — локализация
+* **google_fonts** — кастомные шрифты
+* **build_runner** — генерация кода
+Все зависимости указаны в `pubspec.yaml`.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Архитектура и структура проекта
+Структура папки `lib` соответствует лучшим практикам **Feature-First + Clean Architecture** для Flutter и разделена на логические модули:
+
+```
+lib/
+├── core/                   # Общие утилиты, сервисы, конфигурации и обёртки
+│   ├── cubit/              # Глобальные cubit'ы (навигация, тема)
+│   ├── di/                 # Dependency injection (get_it)
+│   ├── error/              # Обработка ошибок и failures
+│   ├── extensions/         # Расширения для контекста и ошибок
+│   ├── network/            # Работа с сетью (API клиент, обработка ошибок)
+│   ├── storage/            # Локальное хранилище (shared_preferences)
+│   └── theme/              # Цвета и темы приложения
+│
+├── features/               # Фичи приложения, каждая отвечает за отдельный функционал
+│   ├── cart/               # Корзина покупок
+│   │   ├── data/           # Data layer: DTO, datasources, mappers, repositories
+│   │   ├── domain/         # Domain layer: entities, repositories (интерфейсы)
+│   │   └── presentation/   # Presentation layer: BLoC, экраны, виджеты
+│   ├── favorites/          # Избранные товары
+│   ├── home/               # Главный экран: каталог товаров и категории
+│   ├── product_details/    # Детальная страница товара
+│   └── profile/            # Профиль пользователя
+│
+├── app/                    # Инициализация приложения
+│   ├── app.dart            # Главный виджет приложения
+│   └── main_wrapper.dart   # Обёртка с навигацией
+│
+├── resources/              # Ресурсы (изображения через spider)
+├── l10n/                   # Локализация приложения
+├── env/                    # Конфигурации окружения
+└── main.dart               # Точка входа в приложение
+```
+
+Каждая фича в `features/` следует принципам **Clean Architecture** и разделена на три слоя:
+- **Domain** — бизнес-логика, entities и интерфейсы репозиториев
+- **Data** — реализация репозиториев, DTO, datasources и мапперы
+- **Presentation** — UI слой с BLoC/Cubit для управления состоянием
+
+Корневые файлы и папки:
+
+- `pubspec.yaml` — описание зависимостей и конфигурации Flutter проекта
+- `analysis_options.yaml` — настройки линтера и анализатора кода
+- `README.md` — документация проекта
+- `android/`, `ios/`, `web/` — платформенные папки для сборки под Android/iOS/Web
+- `assets/` — статические ресурсы (изображения)
+
+## Установка и запуск
+
+0. Установите Flutter SDK и необходимые инструменты
+   [https://docs.flutter.dev/get-started/install](https://docs.flutter.dev/get-started/install)
+
+1. Клонируйте этот репозиторий
+2. Установите зависимости:
+
+```bash
+flutter pub get
+```
+
+3. Создайте файл `.env` в корне проекта на основе `.env.example` и введите использующийся API:
+
+```
+BASE_URL=https://store.caravanlabs.ru/api/v1
+```
+
+4. Сгенерируйте код:
+
+```bash
+dart run build_runner build --delete-conflicting-outputs
+```
+
+5. Запустите приложение:
+
+```bash
+flutter run
+```
+
+## Генерация ресурсов
+
+- При изменении ассетов:
+```bash
+spider build
+```
+P.S. Предварительно нужно установить `spider` как глобальный инструмент командной строки c помощью `dart pub global activate spider`
+- При изменении локализации
+```bash
+flutter gen-l10n
+```
+- При изменении DTO или переменных окружения
+```bash
+dart run build_runner build --delete-conflicting-outputs
+```

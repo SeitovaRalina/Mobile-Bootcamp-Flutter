@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:mobile_bootcamp_example/core/theme/app_colors.dart';
 
+import '../../../../core/extensions/context_extension.dart';
 import '../../../favorites/presentation/bloc/favorites_bloc.dart';
 import '../../../product_details/presentation/product_details_screen.dart';
 import '../../domain/entities/product_model.dart';
@@ -19,20 +21,22 @@ class ProductCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final heroTag = 'product_${product.id}_$contextId';
+    final colorScheme = context.colorScheme;
 
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) =>
-                ProductDetailsScreen(product: product, heroTag: heroTag),
-          ),
-        );
-      },
-      child: Card(
-        elevation: 2,
-        clipBehavior: Clip.antiAlias,
+    return Card(
+      elevation: 3,
+      clipBehavior: Clip.antiAlias,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) =>
+                  ProductDetailsScreen(product: product, heroTag: heroTag),
+            ),
+          );
+        },
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -46,14 +50,8 @@ class ProductCard extends StatelessWidget {
                       imageUrl: product.images.first,
                       fit: BoxFit.cover,
                       placeholder: (_, _) =>
-                          const Center(child: CircularProgressIndicator()),
-                      errorWidget: (_, _, _) => const Center(
-                        child: Icon(
-                          Icons.image_not_supported_outlined,
-                          color: Colors.grey,
-                          size: 30,
-                        ),
-                      ),
+                          Container(color: colorScheme.surfaceContainerHighest),
+                      errorWidget: (_, _, _) => Icon(Icons.image_outlined),
                     ),
                   ),
                   Positioned(
@@ -70,7 +68,7 @@ class ProductCard extends StatelessWidget {
                         return IconButton(
                           icon: Icon(
                             isFavorite ? Icons.favorite : Icons.favorite_border,
-                            color: isFavorite ? Colors.red : Colors.grey,
+                            color: isFavorite ? AppColors.favorite : null,
                           ),
                           onPressed: () {
                             context.read<FavoritesBloc>().add(
@@ -93,14 +91,14 @@ class ProductCard extends StatelessWidget {
                     product.title,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.titleSmall,
+                    style: context.textTheme.titleSmall,
                   ),
                   const SizedBox(height: 4),
                   Text(
                     "\$${product.price.toStringAsFixed(2)}",
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    style: context.textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.primary,
+                      color: colorScheme.primary,
                     ),
                   ),
                 ],

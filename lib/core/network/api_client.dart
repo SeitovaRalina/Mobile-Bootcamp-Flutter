@@ -6,7 +6,7 @@ import '../../features/home/data/dto/product_dto.dart';
 
 part 'api_client.g.dart';
 
-@RestApi(baseUrl: "https://api.escuelajs.co/api/v1")
+@RestApi(baseUrl: "https://store.caravanlabs.ru/api/v1")
 abstract class RestClient {
   factory RestClient(Dio dio, {String baseUrl}) = _RestClient;
 

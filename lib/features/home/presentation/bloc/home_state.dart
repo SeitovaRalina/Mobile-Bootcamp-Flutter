@@ -23,8 +23,8 @@ class HomeLoaded extends HomeState {
 }
 
 class HomeError extends HomeState {
-  final String message;
-  HomeError(this.message);
+  final Failure failure;
+  HomeError(this.failure);
   @override
-  List<Object> get props => [message];
+  List<Object> get props => [failure];
 }

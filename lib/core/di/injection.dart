@@ -1,32 +1,22 @@
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-// Core
 import '../../features/favorites/data/datasources/favorites_data_source.dart';
 import '../../features/home/data/datasources/category_data_source.dart';
 import '../../features/home/data/repositories/category_repository_impl.dart';
 import '../../features/home/domain/repositories/category_repository.dart';
 import '../storage/local_storage.dart';
 import '../network/api_client.dart';
-
-// Home feature
 import '../../features/home/data/datasources/product_data_source.dart';
 import '../../features/home/data/repositories/product_repository_impl.dart';
 import '../../features/home/domain/repositories/product_repository.dart';
 import '../../features/home/presentation/bloc/home_bloc.dart';
-
-// Cart feature
 import '../../features/cart/data/datasources/cart_data_source.dart';
 import '../../features/cart/data/repositories/cart_repository_impl.dart';
 import '../../features/cart/domain/repositories/cart_repository.dart';
 import '../../features/cart/presentation/bloc/cart_bloc.dart';
-
-// Favorites feature
 import '../../features/favorites/data/repositories/favorites_repository_impl.dart';
 import '../../features/favorites/domain/repositories/favorites_repository.dart';
 import '../../features/favorites/presentation/bloc/favorites_bloc.dart';
-
-// Core Blocs/Cubits
 import '../cubit/theme_cubit.dart';
 import '../cubit/bottom_nav_cubit.dart';
 

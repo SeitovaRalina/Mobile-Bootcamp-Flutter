@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../core/extensions/context_extension.dart';
+import '../../../../core/theme/app_colors.dart';
 import '../bloc/cart_bloc.dart';
 
 class CartSummary extends StatelessWidget {
@@ -19,16 +21,15 @@ class CartSummary extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text(
-                  "Total:",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                Text(
+                  context.l10n.cartTotal,
+                  style: context.textTheme.titleLarge,
                 ),
                 Text(
                   "\$${totalAmount.toStringAsFixed(2)}",
-                  style: const TextStyle(
-                    fontSize: 18,
+                  style: context.textTheme.titleLarge?.copyWith(
                     fontWeight: FontWeight.bold,
-                    color: Colors.green,
+                    color: AppColors.success,
                   ),
                 ),
               ],
@@ -41,12 +42,12 @@ class CartSummary extends StatelessWidget {
                 showDialog(
                   context: context,
                   builder: (_) => AlertDialog(
-                    title: const Text("Success"),
-                    content: const Text("Order placed successfully!"),
+                    title: Text(context.l10n.success),
+                    content: Text(context.l10n.cartOrderPlaced),
                     actions: [
                       TextButton(
                         onPressed: () => navigator.pop(),
-                        child: const Text("OK"),
+                        child: Text(context.l10n.ok),
                       ),
                     ],
                   ),
@@ -55,7 +56,7 @@ class CartSummary extends StatelessWidget {
               style: FilledButton.styleFrom(
                 minimumSize: const Size(double.infinity, 50),
               ),
-              child: const Text("Checkout"),
+              child: Text(context.l10n.cartCheckout),
             ),
           ],
         ),

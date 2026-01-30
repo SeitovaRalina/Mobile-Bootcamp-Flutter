@@ -2,17 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/cubit/theme_cubit.dart';
+import '../../../core/extensions/context_extension.dart';
+import '../../../core/theme/app_colors.dart';
+import '../../../resources/app_images.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
     return Scaffold(
-      appBar: AppBar(title: const Text('Profile')),
+      appBar: AppBar(title: Text(context.l10n.profileTitle)),
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         child: Column(
@@ -22,7 +22,7 @@ class ProfileScreen extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(24),
               child: Image.asset(
-                'assets/images/profile_placeholder.webp',
+                AppImages.profilePlaceholder,
                 width: 120,
                 height: 120,
                 fit: BoxFit.cover,
@@ -30,8 +30,8 @@ class ProfileScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Text(
-              'FakeStore Demo',
-              style: theme.textTheme.headlineMedium?.copyWith(
+              context.l10n.profileDemoName,
+              style: context.textTheme.headlineMedium?.copyWith(
                 fontWeight: FontWeight.w700,
                 letterSpacing: -0.2,
               ),
@@ -39,9 +39,9 @@ class ProfileScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Student Labs 2026 • Mobile Bootcamp',
-              style: theme.textTheme.titleMedium?.copyWith(
-                color: colorScheme.primary.withValues(alpha: 0.8),
+              context.l10n.profileDevInfo,
+              style: context.textTheme.titleMedium?.copyWith(
+                color: AppColors.primary.withValues(alpha: 0.8),
                 fontWeight: FontWeight.w500,
               ),
               textAlign: TextAlign.center,
@@ -52,7 +52,9 @@ class ProfileScreen extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
-              color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+              color: context.colorScheme.surfaceContainerHighest.withValues(
+                alpha: 0.4,
+              ),
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
@@ -62,12 +64,12 @@ class ProfileScreen extends StatelessWidget {
                       children: [
                         Icon(
                           Icons.palette_outlined,
-                          color: colorScheme.primary,
+                          color: context.colorScheme.primary,
                         ),
                         const SizedBox(width: 12),
                         Text(
-                          'Appearance',
-                          style: theme.textTheme.titleMedium?.copyWith(
+                          context.l10n.profileAppearance,
+                          style: context.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -77,20 +79,20 @@ class ProfileScreen extends StatelessWidget {
                     BlocBuilder<ThemeCubit, ThemeMode>(
                       builder: (context, currentMode) {
                         return SegmentedButton<ThemeMode>(
-                          segments: const [
+                          segments: [
                             ButtonSegment(
                               value: ThemeMode.system,
-                              label: Text('System'),
+                              label: Text(context.l10n.profileThemeSystem),
                               icon: Icon(Icons.brightness_auto),
                             ),
                             ButtonSegment(
                               value: ThemeMode.light,
-                              label: Text('Light'),
+                              label: Text(context.l10n.profileThemeLight),
                               icon: Icon(Icons.light_mode),
                             ),
                             ButtonSegment(
                               value: ThemeMode.dark,
-                              label: Text('Dark'),
+                              label: Text(context.l10n.profileThemeDark),
                               icon: Icon(Icons.dark_mode),
                             ),
                           ],
@@ -112,7 +114,9 @@ class ProfileScreen extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
-              color: colorScheme.surfaceContainerHighest.withValues(alpha: 0.4),
+              color: context.colorScheme.surfaceContainerHighest.withValues(
+                alpha: 0.4,
+              ),
               child: Padding(
                 padding: const EdgeInsets.all(20),
                 child: Column(
@@ -120,11 +124,14 @@ class ProfileScreen extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        Icon(Icons.school_outlined, color: colorScheme.primary),
+                        Icon(
+                          Icons.school_outlined,
+                          color: context.colorScheme.primary,
+                        ),
                         const SizedBox(width: 12),
                         Text(
-                          'About this app',
-                          style: theme.textTheme.titleMedium?.copyWith(
+                          context.l10n.profileAboutApp,
+                          style: context.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w600,
                           ),
                         ),
@@ -132,9 +139,10 @@ class ProfileScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 16),
                     Text(
-                      'This application was created as a practical project during the Flutter Mobile Development Bootcamp organized by Student Labs in 2026.\n\n'
-                      'The main goal is to help beginners master clean architecture, state management (Bloc/Cubit), working with APIs, theming and navigation in real-world-like e-commerce application.',
-                      style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+                      context.l10n.profileAboutDescription,
+                      style: context.textTheme.bodyMedium?.copyWith(
+                        height: 1.5,
+                      ),
                     ),
                   ],
                 ),
@@ -143,9 +151,9 @@ class ProfileScreen extends StatelessWidget {
 
             const SizedBox(height: 40),
             Text(
-              'v1.0.0 (Student Labs Bootcamp Edition)',
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: colorScheme.onSurfaceVariant,
+              context.l10n.profileVersion('1.0.0'),
+              style: context.textTheme.bodySmall?.copyWith(
+                color: context.colorScheme.onSurfaceVariant,
               ),
             ),
           ],

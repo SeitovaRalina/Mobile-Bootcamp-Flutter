@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/extensions/context_extension.dart';
+import '../../../../resources/app_images.dart';
+
 class PromoCarousel extends StatefulWidget {
   const PromoCarousel({super.key});
 
@@ -12,9 +15,9 @@ class _PromoCarouselState extends State<PromoCarousel> {
   int _currentIndex = 0;
 
   final List<String> _promoImages = [
-    'assets/images/promo_1.webp',
-    'assets/images/promo_2.webp',
-    'assets/images/promo_3.webp',
+    AppImages.promo1,
+    AppImages.promo2,
+    AppImages.promo3,
   ];
 
   @override
@@ -29,30 +32,19 @@ class _PromoCarouselState extends State<PromoCarousel> {
             itemCount: _promoImages.length,
             onPageChanged: (index) => setState(() => _currentIndex = index),
             itemBuilder: (context, index) {
-              return Container(
-                margin: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(16),
-                  image: DecorationImage(
-                    image: AssetImage(_promoImages[index]),
-                    fit: BoxFit.cover,
-                  ),
-                  color: Colors.grey.shade300,
-                ),
+              return Card(
+                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                color: context.colorScheme.surfaceContainerHighest,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(16),
                   child: Image.asset(
                     _promoImages[index],
                     fit: BoxFit.cover,
-                    errorBuilder: (context, error, stackTrace) {
-                      return const Center(
-                        child: Icon(
-                          Icons.broken_image,
-                          size: 50,
-                          color: Colors.grey,
-                        ),
-                      );
-                    },
+                    errorBuilder: (context, _, _) => Icon(
+                      Icons.image_outlined,
+                      size: 50,
+                      color: context.colorScheme.onSurfaceVariant,
+                    ),
                   ),
                 ),
               );
@@ -64,15 +56,16 @@ class _PromoCarouselState extends State<PromoCarousel> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
                 _promoImages.length,
-                (index) => Container(
+                (index) => AnimatedContainer(
+                  duration: const Duration(milliseconds: 300),
                   margin: const EdgeInsets.symmetric(horizontal: 4),
-                  width: 8,
+                  width: _currentIndex == index ? 20 : 8,
                   height: 8,
                   decoration: BoxDecoration(
-                    shape: BoxShape.circle,
+                    borderRadius: BorderRadius.circular(4),
                     color: _currentIndex == index
-                        ? Theme.of(context).primaryColor
-                        : Colors.white.withValues(alpha: 0.5),
+                        ? context.colorScheme.primary
+                        : context.colorScheme.primary.withValues(alpha: 0.2),
                   ),
                 ),
               ),

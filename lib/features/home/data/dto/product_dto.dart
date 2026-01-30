@@ -30,4 +30,3 @@ class ProductDto extends Equatable {
   @override
   List<Object?> get props => [id, title, price, category, images];
 }
-

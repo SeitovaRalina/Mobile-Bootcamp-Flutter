@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:mobile_bootcamp_example/features/cart/presentation/widgets/cart_summary.dart';
 
+import '../../../core/extensions/context_extension.dart';
+import '../../../core/extensions/error_extension.dart';
 import 'bloc/cart_bloc.dart';
+import 'widgets/cart_summary.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -11,17 +13,17 @@ class CartScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("My Cart")),
+      appBar: AppBar(title: Text(context.l10n.cartMyCart)),
       body: BlocBuilder<CartBloc, CartState>(
         builder: (context, state) {
           if (state is CartLoading) {
             return const Center(child: CircularProgressIndicator());
           }
           if (state is CartError) {
-            return Center(child: Text(state.message));
+            return Center(child: Text(state.failure.toMessage(context)));
           }
           if (state is! CartLoaded || state.cart.items.isEmpty) {
-            return const Center(child: Text('Your cart is empty'));
+            return Center(child: Text(context.l10n.cartEmpty));
           }
           final cart = state.cart;
           return Column(
@@ -65,16 +67,14 @@ class CartScreen extends StatelessWidget {
                             child: Center(
                               child: Text(
                                 "${item.quantity}",
-                                style: const TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style: context.textTheme.bodyMedium,
                               ),
                             ),
                           ),
                           IconButton(
                             icon: const Icon(Icons.add_circle_outline),
                             onPressed: () => context.read<CartBloc>().add(
-                              RemoveFromCart(item.product),
+                              AddToCart(item.product),
                             ),
                           ),
                         ],

@@ -39,4 +39,3 @@ class FavoritesRepositoryImpl implements IFavoritesRepository {
     await saveFavorites(FavoritesModel(items: items));
   }
 }
-

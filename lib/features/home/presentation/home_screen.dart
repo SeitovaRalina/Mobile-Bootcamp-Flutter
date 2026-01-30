@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile_bootcamp_example/features/home/presentation/widgets/category_tab.dart';
 import 'package:mobile_bootcamp_example/features/home/presentation/widgets/product_tab.dart';
 
+import '../../../core/extensions/context_extension.dart';
+import '../../../core/extensions/error_extension.dart';
 import 'bloc/home_bloc.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -14,11 +16,11 @@ class HomeScreen extends StatelessWidget {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text("FakeStore"),
-          bottom: const TabBar(
+          title: Text(context.l10n.appName),
+          bottom: TabBar(
             tabs: [
-              Tab(text: "Home"),
-              Tab(text: "Category"),
+              Tab(text: context.l10n.homeTabHome),
+              Tab(text: context.l10n.homeTabCategory),
             ],
           ),
         ),
@@ -31,11 +33,11 @@ class HomeScreen extends StatelessWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(state.message),
+                    Text(state.failure.toMessage(context)),
                     ElevatedButton(
                       onPressed: () =>
                           context.read<HomeBloc>().add(LoadHomeData()),
-                      child: const Text("Retry"),
+                      child: Text(context.l10n.retry),
                     ),
                   ],
                 ),

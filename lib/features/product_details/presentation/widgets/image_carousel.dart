@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/extensions/context_extension.dart';
+
 class ImageCarousel extends StatelessWidget {
   final List<String> images;
   final String? heroTag;
@@ -30,18 +32,12 @@ class ImageCarousel extends StatelessWidget {
               Widget imageWidget = CachedNetworkImage(
                 imageUrl: images[index],
                 fit: BoxFit.cover,
-                placeholder: (_, _) =>
-                    const Center(child: CircularProgressIndicator()),
-                errorWidget: (_, _, _) => const Center(
-                  child: Icon(
-                    Icons.image_not_supported_outlined,
-                    size: 50,
-                    color: Colors.grey,
-                  ),
+                placeholder: (_, _) => Container(
+                  color: context.colorScheme.surfaceContainerHighest,
                 ),
+                errorWidget: (_, _, _) =>
+                    const Icon(Icons.broken_image, size: 50),
               );
-
-              // Only apply Hero to the first image to avoid tag conflicts or weird behavior during scroll
               if (index == 0 && heroTag != null) {
                 return Hero(tag: heroTag!, child: imageWidget);
               }
@@ -55,15 +51,16 @@ class ImageCarousel extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(
                   images.length,
-                  (index) => Container(
+                  (index) => AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
                     margin: const EdgeInsets.symmetric(horizontal: 4),
-                    width: 8,
+                    width: currentIndex == index ? 24 : 8,
                     height: 8,
                     decoration: BoxDecoration(
-                      shape: BoxShape.circle,
+                      borderRadius: BorderRadius.circular(4),
                       color: currentIndex == index
-                          ? Theme.of(context).primaryColor
-                          : Colors.grey,
+                          ? context.colorScheme.primary
+                          : context.colorScheme.primary.withValues(alpha: 0.2),
                     ),
                   ),
                 ),

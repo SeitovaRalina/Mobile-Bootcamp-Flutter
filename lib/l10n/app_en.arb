@@ -1,0 +1,54 @@
+{
+  "@@locale": "en",
+
+  "@@section_common": "",
+  "appName": "FakeStore",
+  "retry": "Retry",
+  "errorUnknown": "Something went wrong",
+  "errorNetwork": "No internet connection",
+  "errorServer": "Server error. Please try again later",
+  "errorCache": "Storage error",
+  "success": "Success",
+  "ok": "OK",
+
+  "@@section_navigation": "",
+  "navHome": "Home",
+  "navCart": "Cart",
+  "navFavorites": "Favorites",
+  "navProfile": "Profile",
+
+  "@@section_home": "",
+  "homeTabHome": "Home",
+  "homeTabCategory": "Category",
+  "homeRecommendedProducts": "Recommended products",
+  "homeExplore": "Explore",
+  "homeNoProductsInCategory": "No products found in this category",
+
+  "@@section_product_details": "",
+  "detailsDescription": "Description",
+  "detailsAddToCart": "Add to Cart",
+  "detailsViewCart": "View Cart",
+
+  "@@section_cart": "",
+  "cartMyCart": "My Cart",
+  "cartEmpty": "Your cart is empty",
+  "cartTotal": "Total:",
+  "cartCheckout": "Checkout",
+  "cartOrderPlaced": "Order placed successfully!",
+
+  "@@section_favorites": "",
+  "favoritesTitle": "My Favorites",
+  "favoritesEmpty": "No favorites yet",
+
+  "@@section_profile": "",
+  "profileTitle": "My Profile",
+  "profileDemoName": "FakeStore Demo",
+  "profileDevInfo": "Student Labs 2026 • Mobile Bootcamp",
+  "profileAppearance": "Appearance",
+  "profileThemeSystem": "System",
+  "profileThemeLight": "Light",
+  "profileThemeDark": "Dark",
+  "profileAboutApp": "About this app",
+  "profileAboutDescription": "This application was created as a practical project during the Flutter Mobile Development Bootcamp organized by Student Labs in 2026.\n\nThe main goal is to help beginners master clean architecture, state management (Bloc/Cubit), working with APIs, theming and navigation in real-world-like e-commerce application.",
+  "profileVersion": "v{version} (Student Labs Bootcamp Edition)"
+}

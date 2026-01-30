@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../core/extensions/context_extension.dart';
+import '../../../core/theme/app_colors.dart';
 import '../../favorites/presentation/bloc/favorites_bloc.dart';
 import '../../home/domain/entities/product_model.dart';
 import 'widgets/bottom_cart_bar.dart';
@@ -34,7 +36,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             builder: (context, isFavorite) {
               return IconButton(
                 icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_border),
-                color: isFavorite ? Colors.red : null,
+                color: isFavorite ? AppColors.favorite : null,
                 onPressed: () {
                   context.read<FavoritesBloc>().add(
                     ToggleFavorite(widget.product),
@@ -65,25 +67,25 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   const SizedBox(height: 16),
                   Text(
                     widget.product.title,
-                    style: Theme.of(context).textTheme.headlineSmall,
+                    style: context.textTheme.headlineSmall,
                   ),
                   const SizedBox(height: 8),
                   Text(
                     "\$${widget.product.price.toStringAsFixed(2)}",
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.primary,
+                    style: context.textTheme.headlineMedium?.copyWith(
+                      color: context.colorScheme.primary,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 24),
                   Text(
-                    "Description",
-                    style: Theme.of(context).textTheme.titleMedium,
+                    context.l10n.detailsDescription,
+                    style: context.textTheme.titleMedium,
                   ),
                   const SizedBox(height: 8),
                   Text(
                     widget.product.description,
-                    style: Theme.of(context).textTheme.bodyMedium,
+                    style: context.textTheme.bodyMedium,
                   ),
                 ],
               ),

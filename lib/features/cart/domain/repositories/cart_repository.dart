@@ -5,4 +5,3 @@ abstract class ICartRepository {
   Future<void> saveCart(CartModel cart);
   Future<void> clearCart();
 }
-

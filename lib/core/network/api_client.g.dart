@@ -12,7 +12,7 @@ part of 'api_client.dart';
 
 class _RestClient implements RestClient {
   _RestClient(this._dio, {this.baseUrl, this.errorLogger}) {
-    baseUrl ??= 'https://api.escuelajs.co/api/v1';
+    baseUrl ??= 'https://store.caravanlabs.ru/api/v1';
   }
 
   final Dio _dio;

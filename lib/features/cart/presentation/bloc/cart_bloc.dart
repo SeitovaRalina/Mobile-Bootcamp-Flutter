@@ -1,5 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:mobile_bootcamp_example/core/error/failures.dart';
+import 'package:mobile_bootcamp_example/core/network/error_handler.dart';
 
 import '../../domain/entities/cart_model.dart';
 import '../../domain/repositories/cart_repository.dart';
@@ -25,7 +27,7 @@ class CartBloc extends Bloc<CartEvent, CartState> {
       final cart = await _repository.getCart();
       emit(CartLoaded(cart));
     } catch (e) {
-      emit(const CartError('Failed to load cart'));
+      emit(CartError(ErrorHandler.handle(e)));
     }
   }
 
@@ -33,22 +35,26 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     if (state is! CartLoaded) return;
     final current = (state as CartLoaded).cart;
 
-    final items = List<CartItemModel>.from(current.items);
-    final index = items.indexWhere(
-      (item) => item.product.id == event.product.id,
-    );
-
-    if (index != -1) {
-      items[index] = CartItemModel(
-        product: items[index].product,
-        quantity: items[index].quantity + 1,
+    try {
+      final items = List<CartItemModel>.from(current.items);
+      final index = items.indexWhere(
+        (item) => item.product.id == event.product.id,
       );
-    } else {
-      items.add(CartItemModel(product: event.product, quantity: 1));
+
+      if (index != -1) {
+        items[index] = CartItemModel(
+          product: items[index].product,
+          quantity: items[index].quantity + 1,
+        );
+      } else {
+        items.add(CartItemModel(product: event.product, quantity: 1));
+      }
+      final newCart = CartModel(items: items);
+      await _repository.saveCart(newCart);
+      emit(CartLoaded(newCart));
+    } catch (e) {
+      emit(CartError(ErrorHandler.handle(e)));
     }
-    final newCart = CartModel(items: items);
-    await _repository.saveCart(newCart);
-    emit(CartLoaded(newCart));
   }
 
   Future<void> _onRemoveFromCart(
@@ -58,30 +64,38 @@ class CartBloc extends Bloc<CartEvent, CartState> {
     if (state is! CartLoaded) return;
     final current = (state as CartLoaded).cart;
 
-    final items = List<CartItemModel>.from(current.items);
-    final index = items.indexWhere(
-      (item) => item.product.id == event.product.id,
-    );
+    try {
+      final items = List<CartItemModel>.from(current.items);
+      final index = items.indexWhere(
+        (item) => item.product.id == event.product.id,
+      );
 
-    if (index != -1) {
-      if (items[index].quantity > 1) {
-        items[index] = CartItemModel(
-          product: items[index].product,
-          quantity: items[index].quantity - 1,
-        );
-      } else {
-        items.removeAt(index);
+      if (index != -1) {
+        if (items[index].quantity > 1) {
+          items[index] = CartItemModel(
+            product: items[index].product,
+            quantity: items[index].quantity - 1,
+          );
+        } else {
+          items.removeAt(index);
+        }
       }
-    }
 
-    final newCart = CartModel(items: items);
-    await _repository.saveCart(newCart);
-    emit(CartLoaded(newCart));
+      final newCart = CartModel(items: items);
+      await _repository.saveCart(newCart);
+      emit(CartLoaded(newCart));
+    } catch (e) {
+      emit(CartError(ErrorHandler.handle(e)));
+    }
   }
 
   Future<void> _onClearCart(ClearCart event, Emitter<CartState> emit) async {
     const newCart = CartModel(items: []);
-    await _repository.saveCart(newCart);
-    emit(const CartLoaded(newCart));
+    try {
+      await _repository.clearCart();
+      emit(const CartLoaded(newCart));
+    } catch (e) {
+      emit(CartError(ErrorHandler.handle(e)));
+    }
   }
 }

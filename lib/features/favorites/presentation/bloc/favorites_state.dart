@@ -21,10 +21,10 @@ class FavoritesLoaded extends FavoritesState {
 }
 
 class FavoritesError extends FavoritesState {
-  final String message;
+  final Failure failure;
 
-  const FavoritesError(this.message);
+  const FavoritesError(this.failure);
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [failure];
 }

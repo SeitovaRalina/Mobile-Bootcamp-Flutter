@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/di/injection.dart';
+import '../../../../core/extensions/context_extension.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/extensions/error_extension.dart';
 import '../../domain/entities/category_model.dart';
 import '../bloc/home_bloc.dart';
 import '../widgets/product_card.dart';
@@ -29,24 +32,27 @@ class CategoryProductsScreen extends StatelessWidget {
                     const Icon(
                       Icons.error_outline,
                       size: 48,
-                      color: Colors.red,
+                      color: AppColors.error,
                     ),
                     const SizedBox(height: 16),
-                    Text(state.message, textAlign: TextAlign.center),
+                    Text(
+                      state.failure.toMessage(context),
+                      textAlign: TextAlign.center,
+                    ),
                     const SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: () => context.read<HomeBloc>().add(
                         SelectCategory(category),
                       ),
-                      child: const Text("Retry"),
+                      child: Text(context.l10n.retry),
                     ),
                   ],
                 ),
               );
             } else if (state is HomeLoaded) {
               if (state.products.isEmpty) {
-                return const Center(
-                  child: Text("No products found in this category"),
+                return Center(
+                  child: Text(context.l10n.homeNoProductsInCategory),
                 );
               }
               return GridView.builder(

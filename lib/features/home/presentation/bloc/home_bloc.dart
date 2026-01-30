@@ -1,6 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
+import '../../../../core/error/failures.dart';
+import '../../../../core/network/error_handler.dart';
 import '../../domain/entities/category_model.dart';
 import '../../domain/repositories/category_repository.dart';
 import '../../domain/repositories/product_repository.dart';
@@ -29,7 +31,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       final categories = await _categoryRepository.getCategories();
       emit(HomeLoaded(products: products, categories: categories));
     } catch (e) {
-      emit(HomeError("Failed to load data: ${e.toString()}"));
+      emit(HomeError(ErrorHandler.handle(e)));
     }
   }
 
@@ -56,7 +58,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         ),
       );
     } catch (e) {
-      emit(HomeError("Failed to load category: ${e.toString()}"));
+      emit(HomeError(ErrorHandler.handle(e)));
     }
   }
 }

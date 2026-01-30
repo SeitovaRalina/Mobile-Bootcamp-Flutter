@@ -12,7 +12,6 @@ abstract class ILocalStorage {
   Future<bool> containsKey(String key);
 }
 
-
 class SharedPreferencesLocalStorage implements ILocalStorage {
   final SharedPreferences _prefs;
 
@@ -53,4 +52,3 @@ class SharedPreferencesLocalStorage implements ILocalStorage {
     return _prefs.containsKey(key);
   }
 }
-

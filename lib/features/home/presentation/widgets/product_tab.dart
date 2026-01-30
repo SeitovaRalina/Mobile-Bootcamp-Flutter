@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/extensions/context_extension.dart';
 import '../../domain/entities/product_model.dart';
 import 'product_card.dart';
 import 'promo_carousel.dart';
@@ -18,7 +19,7 @@ class ProductTab extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
           sliver: SliverToBoxAdapter(
             child: Text(
-              "Recommended products",
+              context.l10n.homeRecommendedProducts,
               style: Theme.of(
                 context,
               ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),

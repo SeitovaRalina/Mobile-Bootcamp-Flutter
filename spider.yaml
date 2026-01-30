@@ -1,0 +1,6 @@
+package: resources
+
+groups:
+  - path: assets/images
+    class_name: AppImages
+    types: [.webp]

@@ -21,10 +21,10 @@ class CartLoaded extends CartState {
 }
 
 class CartError extends CartState {
-  final String message;
+  final Failure failure;
 
-  const CartError(this.message);
+  const CartError(this.failure);
 
   @override
-  List<Object?> get props => [message];
+  List<Object?> get props => [failure];
 }

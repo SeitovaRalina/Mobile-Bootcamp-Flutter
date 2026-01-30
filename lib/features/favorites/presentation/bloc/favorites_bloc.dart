@@ -1,6 +1,8 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
+import '../../../../core/error/failures.dart';
+import '../../../../core/network/error_handler.dart';
 import '../../domain/entities/favorite_model.dart';
 import '../../domain/repositories/favorites_repository.dart';
 import '../../../home/domain/entities/product_model.dart';
@@ -25,7 +27,7 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
       final favorites = await _repository.getFavorites();
       emit(FavoritesLoaded(favorites));
     } catch (e) {
-      emit(const FavoritesError('Failed to load favorites'));
+      emit(FavoritesError(ErrorHandler.handle(e)));
     }
   }
 
@@ -39,7 +41,7 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
       final favorites = await _repository.getFavorites();
       emit(FavoritesLoaded(favorites));
     } catch (e) {
-      emit(const FavoritesError('Failed to update favorites'));
+      emit(FavoritesError(ErrorHandler.handle(e)));
     }
   }
 }

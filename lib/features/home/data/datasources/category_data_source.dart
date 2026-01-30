@@ -1,4 +1,4 @@
-import '../../../../core/network/api_client.dart';
+import '../../../../core/network/rest_client.dart';
 import '../dto/category_dto.dart';
 
 abstract class ICategoryDataSource {

@@ -4,6 +4,7 @@ import '../../features/favorites/data/datasources/favorites_data_source.dart';
 import '../../features/home/data/datasources/category_data_source.dart';
 import '../../features/home/data/repositories/category_repository_impl.dart';
 import '../../features/home/domain/repositories/category_repository.dart';
+import '../network/rest_client.dart';
 import '../storage/local_storage.dart';
 import '../network/api_client.dart';
 import '../../features/home/data/datasources/product_data_source.dart';

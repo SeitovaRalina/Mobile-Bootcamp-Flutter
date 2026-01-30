@@ -1,4 +1,4 @@
-import '../../../../core/network/api_client.dart';
+import '../../../../core/network/rest_client.dart';
 import '../dto/product_dto.dart';
 
 abstract class IProductDataSource {

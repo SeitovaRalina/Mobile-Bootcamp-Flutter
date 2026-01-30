@@ -1,29 +1,28 @@
-import '../../../../core/network/api_client.dart';
 import '../../domain/repositories/product_repository.dart';
-import '../models/product_model.dart';
+import '../../domain/entities/product_model.dart';
+import '../datasources/product_data_source.dart';
+import '../mappers/product_mapper.dart';
 
-class ProductRepositoryImpl implements ProductRepository {
-  final RestClient _client;
+class ProductRepositoryImpl implements IProductRepository {
+  final IProductDataSource _remoteDataSource;
 
-  ProductRepositoryImpl(this._client);
+  ProductRepositoryImpl(this._remoteDataSource);
 
   @override
   Future<List<ProductModel>> getProducts() async {
-    return await _client.getProducts();
-  }
-
-  @override
-  Future<List<CategoryModel>> getCategories() async {
-    return await _client.getCategories();
+    final dtos = await _remoteDataSource.getProducts();
+    return ProductMapper.toModelList(dtos);
   }
 
   @override
   Future<List<ProductModel>> getProductsByCategory(int categoryId) async {
-    return await _client.getProductsByCategory(categoryId);
+    final dtos = await _remoteDataSource.getProductsByCategory(categoryId);
+    return ProductMapper.toModelList(dtos);
   }
 
   @override
   Future<ProductModel> getProductDetails(int id) async {
-    return await _client.getProduct(id);
+    final dto = await _remoteDataSource.getProduct(id);
+    return ProductMapper.toModel(dto);
   }
 }

@@ -5,6 +5,8 @@ abstract class FavoritesEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class LoadFavorites extends FavoritesEvent {}
+
 class ToggleFavorite extends FavoritesEvent {
   final ProductModel product;
   ToggleFavorite(this.product);

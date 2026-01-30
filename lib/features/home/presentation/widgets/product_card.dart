@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../favorites/presentation/bloc/favorites_bloc.dart';
 import '../../../product_details/presentation/product_details_screen.dart';
-import '../../data/models/product_model.dart';
+import '../../domain/entities/product_model.dart';
 
 class ProductCard extends StatelessWidget {
   final ProductModel product;
@@ -43,7 +43,7 @@ class ProductCard extends StatelessWidget {
                   Hero(
                     tag: heroTag,
                     child: CachedNetworkImage(
-                      imageUrl: product.firstImage,
+                      imageUrl: product.images.first,
                       fit: BoxFit.cover,
                       placeholder: (_, _) =>
                           const Center(child: CircularProgressIndicator()),
@@ -59,15 +59,18 @@ class ProductCard extends StatelessWidget {
                   Positioned(
                     top: 4,
                     right: 4,
-                    child: BlocBuilder<FavoritesBloc, FavoritesState>(
-                      builder: (context, state) {
-                        final isFav = state.items.any(
+                    child: BlocSelector<FavoritesBloc, FavoritesState, bool>(
+                      selector: (state) {
+                        if (state is! FavoritesLoaded) return false;
+                        return state.favorites.items.any(
                           (p) => p.id == product.id,
                         );
+                      },
+                      builder: (context, isFavorite) {
                         return IconButton(
                           icon: Icon(
-                            isFav ? Icons.favorite : Icons.favorite_border,
-                            color: isFav ? Colors.red : Colors.grey,
+                            isFavorite ? Icons.favorite : Icons.favorite_border,
+                            color: isFavorite ? Colors.red : Colors.grey,
                           ),
                           onPressed: () {
                             context.read<FavoritesBloc>().add(

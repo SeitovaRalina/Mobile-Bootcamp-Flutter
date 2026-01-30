@@ -22,12 +22,12 @@ class _RestClient implements RestClient {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<List<ProductModel>> getProducts() async {
+  Future<List<ProductDto>> getProducts() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<List<ProductModel>>(
+    final _options = _setStreamType<List<ProductDto>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -38,10 +38,10 @@ class _RestClient implements RestClient {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<List<dynamic>>(_options);
-    late List<ProductModel> _value;
+    late List<ProductDto> _value;
     try {
       _value = _result.data!
-          .map((dynamic i) => ProductModel.fromJson(i as Map<String, dynamic>))
+          .map((dynamic i) => ProductDto.fromJson(i as Map<String, dynamic>))
           .toList();
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
@@ -51,12 +51,12 @@ class _RestClient implements RestClient {
   }
 
   @override
-  Future<ProductModel> getProduct(int id) async {
+  Future<ProductDto> getProduct(int id) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<ProductModel>(
+    final _options = _setStreamType<ProductDto>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -67,9 +67,9 @@ class _RestClient implements RestClient {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late ProductModel _value;
+    late ProductDto _value;
     try {
-      _value = ProductModel.fromJson(_result.data!);
+      _value = ProductDto.fromJson(_result.data!);
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
       rethrow;
@@ -78,12 +78,12 @@ class _RestClient implements RestClient {
   }
 
   @override
-  Future<List<CategoryModel>> getCategories() async {
+  Future<List<CategoryDto>> getCategories() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<List<CategoryModel>>(
+    final _options = _setStreamType<List<CategoryDto>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -94,10 +94,10 @@ class _RestClient implements RestClient {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<List<dynamic>>(_options);
-    late List<CategoryModel> _value;
+    late List<CategoryDto> _value;
     try {
       _value = _result.data!
-          .map((dynamic i) => CategoryModel.fromJson(i as Map<String, dynamic>))
+          .map((dynamic i) => CategoryDto.fromJson(i as Map<String, dynamic>))
           .toList();
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);
@@ -107,12 +107,12 @@ class _RestClient implements RestClient {
   }
 
   @override
-  Future<List<ProductModel>> getProductsByCategory(int id) async {
+  Future<List<ProductDto>> getProductsByCategory(int id) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<List<ProductModel>>(
+    final _options = _setStreamType<List<ProductDto>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -123,10 +123,10 @@ class _RestClient implements RestClient {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<List<dynamic>>(_options);
-    late List<ProductModel> _value;
+    late List<ProductDto> _value;
     try {
       _value = _result.data!
-          .map((dynamic i) => ProductModel.fromJson(i as Map<String, dynamic>))
+          .map((dynamic i) => ProductDto.fromJson(i as Map<String, dynamic>))
           .toList();
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options, response: _result);

@@ -1,47 +1,30 @@
 part of 'cart_bloc.dart';
 
-class CartItem extends Equatable {
-  final ProductModel product;
-  final int quantity;
-
-  const CartItem({required this.product, required this.quantity});
-
-  CartItem copyWith({int? quantity}) {
-    return CartItem(product: product, quantity: quantity ?? this.quantity);
-  }
-
-  double get total => product.price * quantity;
-
-  Map<String, dynamic> toJson() => {
-    'product': product.toJson(),
-    'quantity': quantity,
-  };
-
-  factory CartItem.fromJson(Map<String, dynamic> json) => CartItem(
-    product: ProductModel.fromJson(json['product']),
-    quantity: json['quantity'],
-  );
+abstract class CartState extends Equatable {
+  const CartState();
 
   @override
-  List<Object> get props => [product, quantity];
+  List<Object?> get props => [];
 }
 
-class CartState extends Equatable {
-  final List<CartItem> items;
+class CartLoading extends CartState {
+  const CartLoading();
+}
 
-  const CartState({this.items = const []});
+class CartLoaded extends CartState {
+  final CartModel cart;
 
-  double get totalAmount => items.fold(0, (sum, item) => sum + item.total);
-  int get totalItems => items.fold(0, (sum, item) => sum + item.quantity);
-
-  Map<String, dynamic> toJson() => {
-    'items': items.map((e) => e.toJson()).toList(),
-  };
-
-  factory CartState.fromJson(Map<String, dynamic> json) => CartState(
-    items: (json['items'] as List).map((e) => CartItem.fromJson(e)).toList(),
-  );
+  const CartLoaded(this.cart);
 
   @override
-  List<Object> get props => [items];
+  List<Object?> get props => [cart];
+}
+
+class CartError extends CartState {
+  final String message;
+
+  const CartError(this.message);
+
+  @override
+  List<Object?> get props => [message];
 }

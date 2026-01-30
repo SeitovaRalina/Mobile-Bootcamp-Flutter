@@ -17,14 +17,4 @@ class RemoveFromCart extends CartEvent {
   RemoveFromCart(this.product);
 }
 
-class IncrementItem extends CartEvent {
-  final ProductModel product;
-  IncrementItem(this.product);
-}
-
-class DecrementItem extends CartEvent {
-  final ProductModel product;
-  DecrementItem(this.product);
-}
-
 class ClearCart extends CartEvent {}

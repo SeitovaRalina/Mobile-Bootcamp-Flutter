@@ -1,94 +1,87 @@
-import 'dart:convert';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../home/data/models/product_model.dart';
+import '../../domain/entities/cart_model.dart';
+import '../../domain/repositories/cart_repository.dart';
+import '../../domain/entities/cart_item_model.dart';
+import '../../../home/domain/entities/product_model.dart';
 
 part 'cart_event.dart';
 part 'cart_state.dart';
 
 class CartBloc extends Bloc<CartEvent, CartState> {
-  final SharedPreferences _prefs;
-  static const String _cartKey = 'cart_storage';
+  final ICartRepository _repository;
 
-  CartBloc(this._prefs) : super(const CartState()) {
+  CartBloc(this._repository) : super(CartLoading()) {
     on<LoadCart>(_onLoadCart);
     on<AddToCart>(_onAddToCart);
     on<RemoveFromCart>(_onRemoveFromCart);
-    on<IncrementItem>(_onIncrementItem);
-    on<DecrementItem>(_onDecrementItem);
     on<ClearCart>(_onClearCart);
   }
 
-  void _saveToPrefs(CartState state) {
-    _prefs.setString(_cartKey, jsonEncode(state.toJson()));
-  }
-
-  void _onLoadCart(LoadCart event, Emitter<CartState> emit) {
-    final jsonString = _prefs.getString(_cartKey);
-    if (jsonString != null) {
-      try {
-        final Map<String, dynamic> jsonMap = jsonDecode(jsonString);
-        emit(CartState.fromJson(jsonMap));
-      } catch (e) {
-        // Fallback if data is corrupted
-        emit(const CartState());
-      }
+  Future<void> _onLoadCart(LoadCart event, Emitter<CartState> emit) async {
+    emit(CartLoading());
+    try {
+      final cart = await _repository.getCart();
+      emit(CartLoaded(cart));
+    } catch (e) {
+      emit(const CartError('Failed to load cart'));
     }
   }
 
-  void _onAddToCart(AddToCart event, Emitter<CartState> emit) {
-    final items = List<CartItem>.from(state.items);
+  Future<void> _onAddToCart(AddToCart event, Emitter<CartState> emit) async {
+    if (state is! CartLoaded) return;
+    final current = (state as CartLoaded).cart;
+
+    final items = List<CartItemModel>.from(current.items);
     final index = items.indexWhere(
       (item) => item.product.id == event.product.id,
     );
 
     if (index != -1) {
-      items[index] = items[index].copyWith(quantity: items[index].quantity + 1);
+      items[index] = CartItemModel(
+        product: items[index].product,
+        quantity: items[index].quantity + 1,
+      );
     } else {
-      items.add(CartItem(product: event.product, quantity: 1));
+      items.add(CartItemModel(product: event.product, quantity: 1));
     }
-    final newState = CartState(items: items);
-    emit(newState);
-    _saveToPrefs(newState);
+    final newCart = CartModel(items: items);
+    await _repository.saveCart(newCart);
+    emit(CartLoaded(newCart));
   }
 
-  void _onRemoveFromCart(RemoveFromCart event, Emitter<CartState> emit) {
-    final items = List<CartItem>.from(state.items);
-    items.removeWhere((item) => item.product.id == event.product.id);
-    final newState = CartState(items: items);
-    emit(newState);
-    _saveToPrefs(newState);
-  }
+  Future<void> _onRemoveFromCart(
+    RemoveFromCart event,
+    Emitter<CartState> emit,
+  ) async {
+    if (state is! CartLoaded) return;
+    final current = (state as CartLoaded).cart;
 
-  void _onIncrementItem(IncrementItem event, Emitter<CartState> emit) {
-    add(AddToCart(event.product));
-  }
-
-  void _onDecrementItem(DecrementItem event, Emitter<CartState> emit) {
-    final items = List<CartItem>.from(state.items);
+    final items = List<CartItemModel>.from(current.items);
     final index = items.indexWhere(
       (item) => item.product.id == event.product.id,
     );
 
     if (index != -1) {
       if (items[index].quantity > 1) {
-        items[index] = items[index].copyWith(
+        items[index] = CartItemModel(
+          product: items[index].product,
           quantity: items[index].quantity - 1,
         );
-        final newState = CartState(items: items);
-        emit(newState);
-        _saveToPrefs(newState);
       } else {
-        add(RemoveFromCart(event.product));
+        items.removeAt(index);
       }
     }
+
+    final newCart = CartModel(items: items);
+    await _repository.saveCart(newCart);
+    emit(CartLoaded(newCart));
   }
 
-  void _onClearCart(ClearCart event, Emitter<CartState> emit) {
-    const newState = CartState(items: []);
-    emit(newState);
-    _saveToPrefs(newState);
+  Future<void> _onClearCart(ClearCart event, Emitter<CartState> emit) async {
+    const newCart = CartModel(items: []);
+    await _repository.saveCart(newCart);
+    emit(const CartLoaded(newCart));
   }
 }

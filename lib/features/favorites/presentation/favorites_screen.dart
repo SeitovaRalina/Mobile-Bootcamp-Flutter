@@ -13,9 +13,16 @@ class FavoritesScreen extends StatelessWidget {
       appBar: AppBar(title: const Text("Favorites")),
       body: BlocBuilder<FavoritesBloc, FavoritesState>(
         builder: (context, state) {
-          if (state.items.isEmpty) {
+          if (state is FavoritesLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (state is FavoritesError) {
+            return Center(child: Text(state.message));
+          }
+          if (state is! FavoritesLoaded || state.favorites.items.isEmpty) {
             return const Center(child: Text("No favorites yet"));
           }
+          final items = state.favorites.items;
           return GridView.builder(
             padding: const EdgeInsets.all(16),
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -24,12 +31,9 @@ class FavoritesScreen extends StatelessWidget {
               crossAxisSpacing: 16,
               mainAxisSpacing: 16,
             ),
-            itemCount: state.items.length,
+            itemCount: items.length,
             itemBuilder: (context, index) {
-              return ProductCard(
-                product: state.items[index],
-                contextId: 'favorites',
-              );
+              return ProductCard(product: items[index], contextId: 'favorites');
             },
           );
         },

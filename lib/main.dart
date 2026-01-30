@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'core/cubit/bottom_nav_cubit.dart';
 import 'core/di/injection.dart';
+import 'core/storage/local_storage.dart';
 import 'features/cart/presentation/bloc/cart_bloc.dart';
 import 'features/cart/presentation/cart_screen.dart';
 import 'features/favorites/presentation/bloc/favorites_bloc.dart';
@@ -12,7 +12,7 @@ import 'features/favorites/presentation/favorites_screen.dart';
 import 'features/home/presentation/bloc/home_bloc.dart';
 import 'features/home/presentation/home_screen.dart';
 import 'features/onboarding/presentation/onboarding_screen.dart';
-import 'features/profile/presentation/cubit/theme_cubit.dart';
+import 'core/cubit/theme_cubit.dart';
 import 'features/profile/presentation/profile_screen.dart';
 
 void main() async {
@@ -29,8 +29,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => getIt<ThemeCubit>()),
-        // Trigger LoadCart on startup
-        BlocProvider(create: (_) => getIt<CartBloc>()..add(LoadCart())),
+        BlocProvider(create: (_) => getIt<CartBloc>()),
         BlocProvider(create: (_) => getIt<FavoritesBloc>()),
         BlocProvider(create: (_) => getIt<HomeBloc>()..add(LoadHomeData())),
         BlocProvider(create: (_) => getIt<BottomNavCubit>()),
@@ -69,10 +68,16 @@ class InitialRouter extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final prefs = getIt<SharedPreferences>();
-    final onboardingComplete = prefs.getBool('onboarding_completed') ?? false;
-
-    return onboardingComplete ? const MainWrapper() : const OnboardingScreen();
+    final storage = getIt<ILocalStorage>();
+    return FutureBuilder<bool?>(
+      future: storage.getBool('onboarding_completed'),
+      builder: (context, snapshot) {
+        final onboardingComplete = snapshot.data ?? false;
+        return onboardingComplete
+            ? const MainWrapper()
+            : const OnboardingScreen();
+      },
+    );
   }
 }
 

@@ -1,8 +1,7 @@
-import '../../data/models/product_model.dart';
+import '../entities/product_model.dart';
 
-abstract class ProductRepository {
+abstract class IProductRepository {
   Future<List<ProductModel>> getProducts();
-  Future<List<CategoryModel>> getCategories();
   Future<List<ProductModel>> getProductsByCategory(int categoryId);
   Future<ProductModel> getProductDetails(int id);
 }

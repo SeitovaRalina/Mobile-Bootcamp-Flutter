@@ -1,23 +1,45 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 
-import '../../../home/data/models/product_model.dart';
+import '../../domain/entities/favorite_model.dart';
+import '../../domain/repositories/favorites_repository.dart';
+import '../../../home/domain/entities/product_model.dart';
 
 part 'favorites_event.dart';
 part 'favorites_state.dart';
 
 class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
-  FavoritesBloc() : super(const FavoritesState()) {
-    on<ToggleFavorite>((event, emit) {
-      final currentFavorites = List<ProductModel>.from(state.items);
-      final isFav = currentFavorites.any((p) => p.id == event.product.id);
+  final IFavoritesRepository _repository;
 
-      if (isFav) {
-        currentFavorites.removeWhere((p) => p.id == event.product.id);
-      } else {
-        currentFavorites.add(event.product);
-      }
-      emit(FavoritesState(items: currentFavorites));
-    });
+  FavoritesBloc(this._repository) : super(const FavoritesLoading()) {
+    on<LoadFavorites>(_onLoadFavorites);
+    on<ToggleFavorite>(_onToggleFavorite);
+  }
+
+  Future<void> _onLoadFavorites(
+    LoadFavorites event,
+    Emitter<FavoritesState> emit,
+  ) async {
+    emit(const FavoritesLoading());
+    try {
+      final favorites = await _repository.getFavorites();
+      emit(FavoritesLoaded(favorites));
+    } catch (e) {
+      emit(const FavoritesError('Failed to load favorites'));
+    }
+  }
+
+  Future<void> _onToggleFavorite(
+    ToggleFavorite event,
+    Emitter<FavoritesState> emit,
+  ) async {
+    if (state is! FavoritesLoaded) return;
+    try {
+      await _repository.toggleFavorite(event.product);
+      final favorites = await _repository.getFavorites();
+      emit(FavoritesLoaded(favorites));
+    } catch (e) {
+      emit(const FavoritesError('Failed to update favorites'));
+    }
   }
 }

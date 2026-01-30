@@ -1,19 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../core/di/injection.dart';
 import '../../../main.dart';
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
-
-  void _finishOnboarding(BuildContext context) async {
-    final prefs = getIt<SharedPreferences>();
-    await prefs.setBool('onboarding_completed', true);
-    Navigator.of(
-      context,
-    ).pushReplacement(MaterialPageRoute(builder: (_) => const MainWrapper()));
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +33,9 @@ class OnboardingScreen extends StatelessWidget {
               ),
               const SizedBox(height: 48),
               FilledButton(
-                onPressed: () => _finishOnboarding(context),
+                onPressed: () => Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (_) => const MainWrapper()),
+                ),
                 style: FilledButton.styleFrom(
                   minimumSize: const Size(double.infinity, 50),
                 ),
